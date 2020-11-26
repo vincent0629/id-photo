@@ -1,0 +1,8 @@
+.row * {
+  vertical-align: middle;
+}
+
+.ant-slider {
+  display: inline-block;
+  width: 220px;
+}
