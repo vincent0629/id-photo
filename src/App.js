@@ -8,6 +8,7 @@ function App() {
   const [sizeValue, setSizeValue] = useState(0);
   const [image, setImage] = useState(null);
   const [position, setPosition] = useState({x: 0, y: 0});
+  const [offset, setOffset] = useState({x: 0, y: 0});
   const [zoom, setZoom] = useState(1);
   const [rotate, setRotate] = useState(0);
   const [bright, setBright] = useState(1);
@@ -15,7 +16,6 @@ function App() {
   const [background, setBackground] = useState(0);
   const [mouseState, setMouseState] = useState(0);
   const [mouseDown, setMouseDown] = useState({});
-  const [startPosition, setStartPosition] = useState({});
 
   const photoSizes = [
     {
@@ -36,7 +36,8 @@ function App() {
   ];
 
   const reset = () => {
-    setPosition({x: 0, y : 0});
+    setPosition({x: 0, y: 0});
+    setOffset({x: 0, y: 0});
     setZoom(1);
     setRotate(0);
     setBright(1);
@@ -57,10 +58,6 @@ function App() {
       x: event.nativeEvent.clientX,
       y: event.nativeEvent.clientY
     });
-    setStartPosition({
-      x: position.x,
-      y: position.y
-    });
   };
 
   const onMouseMove = (event) => {
@@ -69,10 +66,20 @@ function App() {
 
     if (mouseState === 1)
       setMouseState(2);
-    setPosition({
-      x: startPosition.x + event.nativeEvent.clientX - mouseDown.x,
-      y: startPosition.y + event.nativeEvent.clientY - mouseDown.y 
+    setOffset({
+      x: event.nativeEvent.clientX - mouseDown.x,
+      y: event.nativeEvent.clientY - mouseDown.y
     });
+  };
+
+  const onMouseUp = (event) => {
+    const cos = Math.cos(rotate);
+    const sin = Math.sin(rotate);
+    setPosition({
+      x: position.x + (offset.x * cos + offset.y * sin) / zoom,
+      y: position.y + (-offset.x * sin + offset.y * cos) / zoom
+    });
+    setOffset({x: 0, y: 0});
   };
 
   const onClick = (event) => {
@@ -97,9 +104,9 @@ function App() {
   };
 
   return (
-    <div className='container' onMouseDown={onMouseDown} onMouseMove={onMouseMove} onClick={onClick}>
+    <div className='container' onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onClick={onClick}>
       <div><SizeSelect options={photoSizes} value={sizeValue} onChange={onSizeChanged} /></div>
-      <div><Canvas size={photoSizes[sizeValue]} image={image} position={position} zoom={zoom} rotate={rotate} bright={bright} contrast={contrast} background={background} /></div>
+      <div><Canvas size={photoSizes[sizeValue]} image={image} position={position} offset={offset} zoom={zoom} rotate={rotate} bright={bright} contrast={contrast} background={background} /></div>
       <div><EditTool onZoomChanged={setZoom} onRotateChanged={setRotate} onBrightChanged={setBright} onContrastChanged={setContrast} onBackgroundChanged={setBackground} /></div>
     </div>
   );

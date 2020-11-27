@@ -38,6 +38,7 @@ function Canvas(props) {
       let ctx = offscreen.getContext('2d');
       ctx.clearRect(0, 0, size.width, size.height);
       ctx.translate(size.width / 2, size.height / 2);
+      ctx.translate(props.offset.x, props.offset.y);
       ctx.rotate(props.rotate);
       ctx.scale(props.zoom, props.zoom);
       ctx.translate(props.position.x, props.position.y);
