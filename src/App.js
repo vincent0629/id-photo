@@ -19,19 +19,29 @@ function App() {
 
   const photoSizes = [
     {
-      width: 300,
-      height: 420,
-      name: '1 吋 (28mm x 35mm)'
+      width: 331,
+      height: 413,
+      name: '1 吋證件照 (2.8 x 3.5)'
     },
     {
       width: 413,
-      height: 532,
-      name: '2 吋 (35mm x 45mm)'
+      height: 531,
+      name: '2 吋大頭照 (3.5 x 4.5)'
     },
     {
       width: 496,
       height: 555,
-      name: '2 吋 (42mm x 47mm)'
+      name: '2 吋半身照 (4.2 x 4.7)'
+    },
+    {
+      width: 591,
+      height: 591,
+      name: '美國簽證 (5 x 5)'
+    },
+    {
+      width: 354,
+      height: 472,
+      name: '日本簽證 (3 x 4)'
     }
   ];
 
