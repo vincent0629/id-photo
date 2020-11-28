@@ -1,9 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import './Canvas.css';
 
 function Canvas(props) {
-  const canvasRef = useRef();
-
   const bright = (data, b) => {
     if (b === 1)
       return;
@@ -44,18 +42,33 @@ function Canvas(props) {
       ctx.translate(props.position.x, props.position.y);
       ctx.drawImage(props.image, -size.width / 2, -size.height / 2);
       const data = ctx.getImageData(0, 0, size.width, size.height);
-      background(data.data, props.background);
       bright(data.data, props.bright);
       contrast(data.data, props.contrast);
+      background(data.data, props.background);
 
-      const canvas = canvasRef.current;
+      const canvas = props.canvasRef.current;
       ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, size.width, size.height);
       ctx.putImageData(data, 0, 0);
+
+      if (props.hint) {
+        ctx.strokeStyle = '#ffffffa0';
+        let y = size.height / 8;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(size.width, y);
+        ctx.stroke();
+        y += size.height * 2 / 3;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(size.width, y);
+        ctx.stroke();
+      }
     }
   }, [props]);
 
   return (
-    <canvas ref={canvasRef} width={props.size.width} height={props.size.height} />
+    <canvas ref={props.canvasRef} width={props.size.width} height={props.size.height} />
   );
 }
 

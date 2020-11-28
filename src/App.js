@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SizeSelect from './SizeSelect';
 import Canvas from './Canvas';
 import EditTool from './EditTool';
+import { Button } from 'antd';
+import 'antd/dist/antd.css';
 import './App.css';
 
 function App() {
@@ -14,8 +16,10 @@ function App() {
   const [bright, setBright] = useState(1);
   const [contrast, setContrast] = useState(1);
   const [background, setBackground] = useState(0);
+  const [hint, setHint] = useState(true);
   const [mouseState, setMouseState] = useState(0);
   const [mouseDown, setMouseDown] = useState({});
+  const canvasRef = useRef();
 
   const photoSizes = [
     {
@@ -53,10 +57,26 @@ function App() {
     setBright(1);
     setContrast(1);
     setBackground(0);
+    setHint(true);
   };
 
   const onSizeChanged = (value) => {
     setSizeValue(parseInt(value));
+    setHint(true);
+  };
+
+  const onZoomChanged = (value) => {
+    setZoom(value);
+    setHint(true);
+  };
+
+  const onRotateChanged = (value) => {
+    setRotate(value);
+    setHint(true);
+  };
+
+  const onSaveFile = () => {
+    setHint(false);
   };
 
   const onMouseDown = (event) => {
@@ -68,6 +88,7 @@ function App() {
       x: event.nativeEvent.clientX,
       y: event.nativeEvent.clientY
     });
+    setHint(true);
   };
 
   const onMouseMove = (event) => {
@@ -113,11 +134,22 @@ function App() {
     setMouseState(0);
   };
 
+  useEffect(() => {
+    if (hint === false) {
+      const download = document.createElement('a');
+      download.href = canvasRef.current.toDataURL('image/png').replace('image/png', 'application/octet-stream');
+      download.download = 'photo.png';
+      download.click();
+      setHint(true);
+    }
+  }, [hint]);
+
   return (
     <div className='container' onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onClick={onClick}>
       <div><SizeSelect options={photoSizes} value={sizeValue} onChange={onSizeChanged} /></div>
-      <div><Canvas size={photoSizes[sizeValue]} image={image} position={position} offset={offset} zoom={zoom} rotate={rotate} bright={bright} contrast={contrast} background={background} /></div>
-      <div><EditTool onZoomChanged={setZoom} onRotateChanged={setRotate} onBrightChanged={setBright} onContrastChanged={setContrast} onBackgroundChanged={setBackground} /></div>
+      <div><Canvas canvasRef={canvasRef} size={photoSizes[sizeValue]} image={image} hint={hint} position={position} offset={offset} zoom={zoom} rotate={rotate} bright={bright} contrast={contrast} background={background} /></div>
+      <div><EditTool onZoomChanged={onZoomChanged} onRotateChanged={onRotateChanged} onBrightChanged={setBright} onContrastChanged={setContrast} onBackgroundChanged={setBackground} /></div>
+      <div><Button type='primary' onClick={onSaveFile}>儲存檔案</Button></div>
     </div>
   );
 }
