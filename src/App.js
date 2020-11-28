@@ -20,6 +20,7 @@ function App() {
   const [mouseState, setMouseState] = useState(0);
   const [mouseDown, setMouseDown] = useState({});
   const canvasRef = useRef();
+  const resetRef = useRef();
 
   const photoSizes = [
     {
@@ -52,12 +53,9 @@ function App() {
   const reset = () => {
     setPosition({x: 0, y: 0});
     setOffset({x: 0, y: 0});
-    setZoom(1);
-    setRotate(0);
-    setBright(1);
-    setContrast(1);
-    setBackground(0);
     setHint(true);
+    // Click reset button in EditTool.
+    resetRef.current.click();
   };
 
   const onSizeChanged = (value) => {
@@ -148,7 +146,7 @@ function App() {
     <div className='container' onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onClick={onClick}>
       <div><SizeSelect options={photoSizes} value={sizeValue} onChange={onSizeChanged} /></div>
       <div><Canvas canvasRef={canvasRef} size={photoSizes[sizeValue]} image={image} hint={hint} position={position} offset={offset} zoom={zoom} rotate={rotate} bright={bright} contrast={contrast} background={background} /></div>
-      <div><EditTool onZoomChanged={onZoomChanged} onRotateChanged={onRotateChanged} onBrightChanged={setBright} onContrastChanged={setContrast} onBackgroundChanged={setBackground} /></div>
+      <div><EditTool onZoomChanged={onZoomChanged} onRotateChanged={onRotateChanged} onBrightChanged={setBright} onContrastChanged={setContrast} onBackgroundChanged={setBackground} resetRef={resetRef} /></div>
       <div><Button type='primary' onClick={onSaveFile}>儲存檔案</Button></div>
     </div>
   );

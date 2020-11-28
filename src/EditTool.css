@@ -6,3 +6,7 @@
   display: inline-block;
   width: 220px;
 }
+
+.hidden {
+  display: none
+}
