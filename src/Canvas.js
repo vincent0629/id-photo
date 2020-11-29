@@ -32,8 +32,9 @@ function Canvas(props) {
   };
 
   useEffect(() => {
+    const size = props.size;
+    const canvas = props.canvasRef.current;
     if (props.image) {
-      const size = props.size;
       const offscreen = new OffscreenCanvas(size.width, size.height);
       let ctx = offscreen.getContext('2d');
       ctx.fillStyle = '#ffffff';
@@ -48,7 +49,6 @@ function Canvas(props) {
       bright(data.data, props.bright);
       contrast(data.data, props.contrast);
 
-      const canvas = props.canvasRef.current;
       ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, size.width, size.height);
       ctx.putImageData(data, 0, 0);
@@ -62,6 +62,15 @@ function Canvas(props) {
         let x = size.width / 2;
         drawLine(ctx, x, y1, x, y2);
       }
+    } else {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, size.width, size.height);
+      const text = '點擊此處載入圖檔';
+      const metrics = ctx.measureText(text);
+      ctx.fillStyle = '#000000';
+      ctx.textAlign = 'center';
+      ctx.font = '28px sans-serif';
+      ctx.fillText(text, size.width / 2, size.height / 2);
     }
   }, [props]);
 

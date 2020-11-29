@@ -54,17 +54,17 @@ function App() {
     {
       width: 0,
       height: 0,
-      name: '單張'
+      name: '單張圖檔'
     },
     {
       width: 1200,
       height: 900,
-      name: '4 x 3 吋'
+      name: '4 x 3 吋照片'
     },
     {
       width: 1800,
       height: 1200,
-      name: '6 x 4 吋'
+      name: '6 x 4 吋照片'
     }
   ];
 
