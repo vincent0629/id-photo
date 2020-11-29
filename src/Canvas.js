@@ -53,15 +53,20 @@ function Canvas(props) {
 
       if (props.hint) {
         ctx.strokeStyle = '#ffffffa0';
-        let y = size.height / 8;
+        const y1 = size.height / 8;
         ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(size.width, y);
+        ctx.moveTo(0, y1);
+        ctx.lineTo(size.width, y1);
         ctx.stroke();
-        y += size.height * 2 / 3;
+        const y2 = y1 + size.height * 2 / 3;
         ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(size.width, y);
+        ctx.moveTo(0, y2);
+        ctx.lineTo(size.width, y2);
+        ctx.stroke();
+        let x = size.width / 2;
+        ctx.beginPath();
+        ctx.moveTo(x, y1);
+        ctx.lineTo(x, y2);
         ctx.stroke();
       }
     }
