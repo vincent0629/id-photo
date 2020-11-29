@@ -1,10 +1,10 @@
 import { Select } from 'antd';
 import 'antd/dist/antd.css';
 
-function SizeSelect(props) {
+function OutputSelect(props) {
   return (
     <>
-      選擇照片尺寸
+      選擇輸出尺寸
       <Select style={{width:230}} value={props.value} onChange={props.onChange}>
       {
         props.options.map((option, i) => {
@@ -16,4 +16,4 @@ function SizeSelect(props) {
   );
 }
 
-export default SizeSelect;
+export default OutputSelect;

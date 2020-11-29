@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import SizeSelect from './SizeSelect';
 import Canvas from './Canvas';
 import EditTool from './EditTool';
+import OutputSelect from './OutputSelect';
+import SizeSelect from './SizeSelect';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import './App.css';
@@ -15,7 +16,7 @@ function App() {
   const [rotate, setRotate] = useState(0);
   const [bright, setBright] = useState(1);
   const [contrast, setContrast] = useState(1);
-  const [background, setBackground] = useState(0);
+  const [outputValue, setOutputValue] = useState(0);
   const [hint, setHint] = useState(true);
   const [mouseState, setMouseState] = useState(0);
   const [mouseDown, setMouseDown] = useState({});
@@ -26,27 +27,44 @@ function App() {
     {
       width: 331,
       height: 413,
-      name: '1 吋證件照 (2.8 x 3.5)'
+      name: '1 吋證件照 (2.8 x 3.5 公分)'
     },
     {
       width: 413,
       height: 531,
-      name: '2 吋大頭照 (3.5 x 4.5)'
+      name: '2 吋大頭照 (3.5 x 4.5 公分)'
     },
     {
       width: 496,
       height: 555,
-      name: '2 吋半身照 (4.2 x 4.7)'
+      name: '2 吋半身照 (4.2 x 4.7 公分)'
     },
     {
       width: 591,
       height: 591,
-      name: '美國簽證 (5 x 5)'
+      name: '美國簽證 (5 x 5 公分)'
     },
     {
       width: 354,
       height: 472,
-      name: '日本簽證 (3 x 4)'
+      name: '日本簽證 (3 x 4 公分)'
+    }
+  ];
+  const outputSizes = [
+    {
+      width: 0,
+      height: 0,
+      name: '單張'
+    },
+    {
+      width: 1200,
+      height: 900,
+      name: '4 x 3 吋'
+    },
+    {
+      width: 1800,
+      height: 1200,
+      name: '6 x 4 吋'
     }
   ];
 
@@ -134,10 +152,55 @@ function App() {
 
   useEffect(() => {
     if (hint === false) {
-      const download = document.createElement('a');
-      download.href = canvasRef.current.toDataURL('image/png').replace('image/png', 'application/octet-stream');
-      download.download = 'photo.png';
-      download.click();
+      const photoSize = {width: photoSizes[sizeValue].width, height: photoSizes[sizeValue].height};
+      const outputSize = {width: outputSizes[outputValue].width, height: outputSizes[outputValue].height};
+      if (outputValue === 0) {
+        outputSize.width = photoSize.width;
+        outputSize.height = photoSize.height;
+      }
+      const numX = Math.floor(outputSize.width / (photoSize.width + 2));
+      const numY = Math.floor(outputSize.height / (photoSize.height + 2));
+      const dx = (outputSize.width - photoSize.width * numX) / (numX + 1);
+      const dy = (outputSize.height - photoSize.height * numY) / (numY + 1);
+      const offscreen = new OffscreenCanvas(outputSize.width, outputSize.height);
+      const ctx = offscreen.getContext('2d');
+      ctx.strokeStyle = '#000000';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, outputSize.width, outputSize.height);
+      const dd = 5;
+      for (let j = 0; j < numY; ++j)
+        for (let i = 0; i < numX; ++i) {
+          const x = (dx + photoSize.width) * i + dx;
+          const y = (dy + photoSize.height) * j + dy;
+          ctx.drawImage(canvasRef.current, x, y);
+          if (numX > 1 || numY > 1) {
+            ctx.beginPath();
+            ctx.moveTo(x + dd, y - 1);
+            ctx.lineTo(x - 1, y - 1);
+            ctx.lineTo(x - 1, y + dd);
+            ctx.moveTo(x + photoSize.width + 1 - dd, y - 1);
+            ctx.lineTo(x + photoSize.width + 1, y - 1);
+            ctx.lineTo(x + photoSize.width + 1, y + dd);
+            ctx.moveTo(x - 1, y + photoSize.height + 1 - dd);
+            ctx.lineTo(x - 1, y + photoSize.height + 1);
+            ctx.lineTo(x + dd, y + photoSize.height + 1);
+            ctx.moveTo(x + photoSize.width + 1, y + photoSize.height + 1 - dd);
+            ctx.lineTo(x + photoSize.width + 1, y + photoSize.height + 1);
+            ctx.lineTo(x + photoSize.width - dd, y + photoSize.height + 1);
+            ctx.stroke();
+          }
+        }
+      offscreen.convertToBlob({type: 'image/jpeg', quality: 0.95})
+        .then((blob) => {
+          const reader = new FileReader();
+          reader.addEventListener('load', function() {
+            const download = document.createElement('a');
+            download.href = reader.result;
+            download.download = 'photo.jpg';
+            download.click();
+          });
+          reader.readAsDataURL(blob);
+        });
       setHint(true);
     }
   }, [hint]);
@@ -145,8 +208,9 @@ function App() {
   return (
     <div className='container' onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onClick={onClick}>
       <div><SizeSelect options={photoSizes} value={sizeValue} onChange={onSizeChanged} /></div>
-      <div><Canvas canvasRef={canvasRef} size={photoSizes[sizeValue]} image={image} hint={hint} position={position} offset={offset} zoom={zoom} rotate={rotate} bright={bright} contrast={contrast} background={background} /></div>
-      <div><EditTool onZoomChanged={onZoomChanged} onRotateChanged={onRotateChanged} onBrightChanged={setBright} onContrastChanged={setContrast} onBackgroundChanged={setBackground} resetRef={resetRef} /></div>
+      <div><Canvas canvasRef={canvasRef} size={photoSizes[sizeValue]} image={image} hint={hint} position={position} offset={offset} zoom={zoom} rotate={rotate} bright={bright} contrast={contrast} /></div>
+      <div><EditTool onZoomChanged={onZoomChanged} onRotateChanged={onRotateChanged} onBrightChanged={setBright} onContrastChanged={setContrast} resetRef={resetRef} /></div>
+      <p><OutputSelect options={outputSizes} value={outputValue} onChange={setOutputValue} /></p>
       <div><Button type='primary' onClick={onSaveFile}>儲存檔案</Button></div>
     </div>
   );

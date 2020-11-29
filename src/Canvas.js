@@ -24,11 +24,6 @@ function Canvas(props) {
     }
   };
 
-  const background = (data, b) => {
-    if (b === 0)
-      return;
-  };
-
   const drawLine = (ctx, x1, y1, x2, y2) => {
     ctx.beginPath();
     ctx.moveTo(x1, y1);
@@ -41,7 +36,8 @@ function Canvas(props) {
       const size = props.size;
       const offscreen = new OffscreenCanvas(size.width, size.height);
       let ctx = offscreen.getContext('2d');
-      ctx.clearRect(0, 0, size.width, size.height);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, size.width, size.height);
       ctx.translate(size.width / 2, size.height / 2);
       ctx.translate(props.offset.x, props.offset.y);
       ctx.rotate(props.rotate);
@@ -51,7 +47,6 @@ function Canvas(props) {
       const data = ctx.getImageData(0, 0, size.width, size.height);
       bright(data.data, props.bright);
       contrast(data.data, props.contrast);
-      background(data.data, props.background);
 
       const canvas = props.canvasRef.current;
       ctx = canvas.getContext('2d');
