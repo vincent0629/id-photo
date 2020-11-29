@@ -29,6 +29,13 @@ function Canvas(props) {
       return;
   };
 
+  const drawLine = (ctx, x1, y1, x2, y2) => {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  };
+
   useEffect(() => {
     if (props.image) {
       const size = props.size;
@@ -54,20 +61,11 @@ function Canvas(props) {
       if (props.hint) {
         ctx.strokeStyle = '#ffffffa0';
         const y1 = size.height / 8;
-        ctx.beginPath();
-        ctx.moveTo(0, y1);
-        ctx.lineTo(size.width, y1);
-        ctx.stroke();
+        drawLine(ctx, 0, y1, size.width, y1);
         const y2 = y1 + size.height * 2 / 3;
-        ctx.beginPath();
-        ctx.moveTo(0, y2);
-        ctx.lineTo(size.width, y2);
-        ctx.stroke();
+        drawLine(ctx, 0, y2, size.width, y2);
         let x = size.width / 2;
-        ctx.beginPath();
-        ctx.moveTo(x, y1);
-        ctx.lineTo(x, y2);
-        ctx.stroke();
+        drawLine(ctx, x, y1, x, y2);
       }
     }
   }, [props]);
