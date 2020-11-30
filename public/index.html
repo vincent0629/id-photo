@@ -1,14 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-hant">
   <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HSFYJLCB6G"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-HSFYJLCB6G');
+    </script>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -24,10 +29,20 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>證件照片小工具</title>
+    <style>
+      .center {
+        font-size: 20px;
+        text-align: center;
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <p class="center">線上製作證件照片的小工具</p>
+    <p class="center">支援身份證、護照、台胞證、健保卡、駕照、簽證等尺寸</p>
+    <p class="center">可將編輯好的證件照存成一個圖檔</p>
+    <p class="center">或將多張證件照合併成一張 3x5 吋或 4x6 吋的圖檔</p>
     <div id="root"></div>
     <!--
       This HTML file is a template.
