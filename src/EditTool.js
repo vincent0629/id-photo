@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { forwardRef, useImperativeHandle, useState } from 'react';
 import { Slider } from 'antd';
 import './EditTool.css';
 import 'antd/dist/antd.css';
 
-function EditTool(props) {
+function EditTool(props, ref) {
   const [zoom, setZoom] = useState(100);
   const [rotate, setRotate] = useState(0);
   const [bright, setBright] = useState(100);
@@ -29,12 +29,16 @@ function EditTool(props) {
     props.onContrastChanged(value / 100);
   };
 
-  const onReset = () => {
-    onZoomChanged(100);
-    onRotateChanged(0);
-    onBrightChanged(100);
-    onContrastChanged(100);
-  };
+  useImperativeHandle(ref, () => {
+    return {
+      reset: () => {
+        onZoomChanged(100);
+        onRotateChanged(0);
+        onBrightChanged(100);
+        onContrastChanged(100);
+      }
+    };
+  });
 
   return (
     <>
@@ -42,9 +46,8 @@ function EditTool(props) {
       <div className='row'><span>旋轉</span><Slider min={-180} max={180} value={rotate} onChange={onRotateChanged} /></div>
       <div className='row'><span>亮度</span><Slider min={50} max={200} value={bright} onChange={onBrightChanged} /></div>
       <div className='row'><span>對比</span><Slider min={50} max={200} value={contrast} onChange={onContrastChanged} /></div>
-      <button ref={props.resetRef} className='hidden' onClick={onReset}>Reset</button>
     </>
   );
 }
 
-export default EditTool;
+export default forwardRef(EditTool);
