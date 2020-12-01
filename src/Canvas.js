@@ -66,7 +66,6 @@ function Canvas(props) {
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, size.width, size.height);
       const text = '點擊此處載入圖檔';
-      const metrics = ctx.measureText(text);
       ctx.fillStyle = '#000000';
       ctx.textAlign = 'center';
       ctx.font = '28px sans-serif';
