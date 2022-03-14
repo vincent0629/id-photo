@@ -7,6 +7,51 @@ import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import './App.css';
 
+const photoSizes = [
+  {
+    width: 331,
+    height: 413,
+    name: '1 吋證件照 (2.8 x 3.5 公分)'
+  },
+  {
+    width: 413,
+    height: 531,
+    name: '2 吋大頭照 (3.5 x 4.5 公分)'
+  },
+  {
+    width: 496,
+    height: 555,
+    name: '2 吋半身照 (4.2 x 4.7 公分)'
+  },
+  {
+    width: 591,
+    height: 591,
+    name: '美國簽證 (5 x 5 公分)'
+  },
+  {
+    width: 354,
+    height: 472,
+    name: '日本簽證 (3 x 4 公分)'
+  }
+];
+const outputSizes = [
+  {
+    width: 0,
+    height: 0,
+    name: '單張圖檔'
+  },
+  {
+    width: 1500,
+    height: 900,
+    name: '3 x 5 吋照片'
+  },
+  {
+    width: 1800,
+    height: 1200,
+    name: '4 x 6 吋照片'
+  }
+];
+
 function App() {
   const [sizeValue, setSizeValue] = useState(0);
   const [image, setImage] = useState(null);
@@ -22,51 +67,6 @@ function App() {
   const [mouseDown, setMouseDown] = useState({});
   const canvasRef = useRef();
   const editToolRef = useRef();
-
-  const photoSizes = [
-    {
-      width: 331,
-      height: 413,
-      name: '1 吋證件照 (2.8 x 3.5 公分)'
-    },
-    {
-      width: 413,
-      height: 531,
-      name: '2 吋大頭照 (3.5 x 4.5 公分)'
-    },
-    {
-      width: 496,
-      height: 555,
-      name: '2 吋半身照 (4.2 x 4.7 公分)'
-    },
-    {
-      width: 591,
-      height: 591,
-      name: '美國簽證 (5 x 5 公分)'
-    },
-    {
-      width: 354,
-      height: 472,
-      name: '日本簽證 (3 x 4 公分)'
-    }
-  ];
-  const outputSizes = [
-    {
-      width: 0,
-      height: 0,
-      name: '單張圖檔'
-    },
-    {
-      width: 1500,
-      height: 900,
-      name: '3 x 5 吋照片'
-    },
-    {
-      width: 1800,
-      height: 1200,
-      name: '4 x 6 吋照片'
-    }
-  ];
 
   const reset = () => {
     setPosition({x: 0, y: 0});
@@ -203,7 +203,7 @@ function App() {
         });
       setHint(true);
     }
-  }, [hint]);
+  }, [hint, sizeValue, outputValue]);
 
   return (
     <div className='container' onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onClick={onClick}>
