@@ -54,7 +54,8 @@ function Canvas(props) {
       ctx.putImageData(data, 0, 0);
 
       if (props.hint) {
-        ctx.strokeStyle = '#ffffffa0';
+        ctx.strokeStyle = '#006060a0';
+        ctx.setLineDash([5, 5]);
         const y1 = size.height / 8;
         drawLine(ctx, 0, y1, size.width, y1);
         const y2 = y1 + size.height * 2 / 3;
