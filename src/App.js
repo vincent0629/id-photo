@@ -155,8 +155,8 @@ function App() {
       const photoSize = {width: photoSizes[sizeValue].width, height: photoSizes[sizeValue].height};
       const outputSize = {width: outputSizes[outputValue].width, height: outputSizes[outputValue].height};
       if (outputValue === 0) {
-        outputSize.width = photoSize.width;
-        outputSize.height = photoSize.height;
+        outputSize.width = photoSize.width + 2;
+        outputSize.height = photoSize.height + 2;
       }
       const numX = Math.floor(outputSize.width / (photoSize.width + 2));
       const numY = Math.floor(outputSize.height / (photoSize.height + 2));
