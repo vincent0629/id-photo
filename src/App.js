@@ -208,7 +208,7 @@ function App() {
   return (
     <div className='container' onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onClick={onClick}>
       <div><SizeSelect options={photoSizes} value={sizeValue} onChange={onSizeChanged} /></div>
-      <div><Canvas canvasRef={canvasRef} size={photoSizes[sizeValue]} image={image} hint={hint} position={position} offset={offset} zoom={zoom} rotate={rotate} bright={bright} contrast={contrast} /></div>
+      <div><Canvas canvasRef={canvasRef} image={image} params={{hint, position, offset, size:photoSizes[sizeValue], zoom, rotate, bright, contrast}} /></div>
       <div><EditTool ref={editToolRef} onZoomChanged={onZoomChanged} onRotateChanged={onRotateChanged} onBrightChanged={setBright} onContrastChanged={setContrast} /></div>
       <p><OutputSelect options={outputSizes} value={outputValue} onChange={setOutputValue} /></p>
       <div><Button type='primary' onClick={onSaveFile}>儲存檔案</Button></div>
