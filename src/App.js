@@ -62,8 +62,7 @@ function App() {
   const [contrast, setContrast] = useState(1);
   const [outputValue, setOutputValue] = useState(0);
   const [hint, setHint] = useState(true);
-  const [mouseState, setMouseState] = useState(0);
-  const [mouseDown, setMouseDown] = useState({});
+  const pointerRef = useRef({state: 0});
   const canvasRef = useRef();
   const editToolRef = useRef();
 
@@ -94,31 +93,31 @@ function App() {
     setHint(false);
   };
 
-  const onMouseDown = (event) => {
+  const onPointerDown = (event) => {
     if (event.button !== 0 || event.target.tagName !== 'CANVAS')
       return;
 
-    setMouseState(1);
-    setMouseDown({
+    pointerRef.current = {
+      state: 1,
       x: event.nativeEvent.clientX,
-      y: event.nativeEvent.clientY
-    });
+      y: event.nativeEvent.clientY,
+    };
     setHint(true);
   };
 
-  const onMouseMove = (event) => {
-    if (mouseState === 0)
+  const onPointerMove = (event) => {
+    if (pointerRef.current.state === 0)
       return;
 
-    if (mouseState === 1)
-      setMouseState(2);
+    if (pointerRef.current.state === 1)
+      pointerRef.current.state = 2;
     setOffset({
-      x: event.nativeEvent.clientX - mouseDown.x,
-      y: event.nativeEvent.clientY - mouseDown.y
+      x: event.nativeEvent.clientX - pointerRef.current.x,
+      y: event.nativeEvent.clientY - pointerRef.current.y
     });
   };
 
-  const onMouseUp = (event) => {
+  const onPointerUp = (event) => {
     const cos = Math.cos(rotate);
     const sin = Math.sin(rotate);
     setPosition({
@@ -129,7 +128,7 @@ function App() {
   };
 
   const onClick = (event) => {
-    if (mouseState !== 2 && event.target.tagName === 'CANVAS') {
+    if (pointerRef.current.state !== 2 && event.target.tagName === 'CANVAS') {
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = 'image/*';
@@ -146,7 +145,7 @@ function App() {
       input.click();
     }
 
-    setMouseState(0);
+    pointerRef.current.state = 0;
   };
 
   useEffect(() => {
@@ -205,7 +204,7 @@ function App() {
   }, [hint, sizeValue, outputValue]);
 
   return (
-    <div className='container' onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onClick={onClick}>
+    <div className='container' onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onClick={onClick}>
       <div><SizeSelect options={photoSizes} value={sizeValue} onChange={onSizeChanged} /></div>
       <div><Canvas canvasRef={canvasRef} image={image} params={{hint, position, offset, size:photoSizes[sizeValue], zoom, rotate, bright, contrast}} /></div>
       <div><EditTool ref={editToolRef} onZoomChanged={onZoomChanged} onRotateChanged={onRotateChanged} onBrightChanged={setBright} onContrastChanged={setContrast} /></div>
