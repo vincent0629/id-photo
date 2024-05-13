@@ -4,7 +4,6 @@ import EditTool from './EditTool';
 import OutputSelect from './OutputSelect';
 import SizeSelect from './SizeSelect';
 import { Button } from 'antd';
-import 'antd/dist/antd.css';
 import './App.css';
 
 const photoSizes = [

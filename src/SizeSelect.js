@@ -1,5 +1,4 @@
 import { Select } from 'antd';
-import 'antd/dist/antd.css';
 
 function SizeSelect(props) {
   return (

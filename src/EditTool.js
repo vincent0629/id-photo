@@ -1,7 +1,6 @@
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import { Slider } from 'antd';
 import './EditTool.css';
-import 'antd/dist/antd.css';
 
 function EditTool(props, ref) {
   const [zoom, setZoom] = useState(100);
