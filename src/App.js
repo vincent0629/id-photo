@@ -209,8 +209,8 @@ function App() {
       <div><SizeSelect options={photoSizes} value={sizeValue} onChange={onSizeChanged} /></div>
       <div><Canvas canvasRef={canvasRef} image={image} params={{hint, position, offset, size:photoSizes[sizeValue], zoom, rotate, bright, contrast}} /></div>
       <div><EditTool ref={editToolRef} onZoomChanged={onZoomChanged} onRotateChanged={onRotateChanged} onBrightChanged={setBright} onContrastChanged={setContrast} /></div>
-      <p><OutputSelect options={outputSizes} value={outputValue} onChange={setOutputValue} /></p>
-      <div><Button type='primary' onClick={onSaveFile}>儲存檔案</Button></div>
+      <div><OutputSelect options={outputSizes} value={outputValue} onChange={setOutputValue} /></div>
+      <div className='marginTop'><Button type='primary' onClick={onSaveFile}>儲存檔案</Button></div>
     </div>
   );
 }
