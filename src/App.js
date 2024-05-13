@@ -62,7 +62,7 @@ function App() {
   const [contrast, setContrast] = useState(1);
   const [outputValue, setOutputValue] = useState(0);
   const [hint, setHint] = useState(true);
-  const pointerRef = useRef({state: 0});
+  const pointerRef = useRef({down: false});
   const canvasRef = useRef();
   const editToolRef = useRef();
 
@@ -98,19 +98,19 @@ function App() {
       return;
 
     pointerRef.current = {
-      state: 1,
+      down: true,
       x: event.nativeEvent.clientX,
       y: event.nativeEvent.clientY,
+      move: false,
     };
     setHint(true);
   };
 
   const onPointerMove = (event) => {
-    if (pointerRef.current.state === 0)
+    if (!pointerRef.current.down)
       return;
 
-    if (pointerRef.current.state === 1)
-      pointerRef.current.state = 2;
+    pointerRef.current.move = true;
     setOffset({
       x: event.nativeEvent.clientX - pointerRef.current.x,
       y: event.nativeEvent.clientY - pointerRef.current.y
@@ -118,6 +118,10 @@ function App() {
   };
 
   const onPointerUp = (event) => {
+    if (!pointerRef.current.down)
+      return;
+
+    pointerRef.current.down = false;
     const cos = Math.cos(rotate);
     const sin = Math.sin(rotate);
     setPosition({
@@ -128,24 +132,23 @@ function App() {
   };
 
   const onClick = (event) => {
-    if (pointerRef.current.state !== 2 && event.target.tagName === 'CANVAS') {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.onchange = (event) => {
-        const reader = new FileReader();
-        reader.addEventListener('load', function() {
-          const image = document.createElement('img');
-          image.src = reader.result;
-          setImage(image);
-        });
-        reader.readAsDataURL(event.target.files[0]);
-        reset();
-      };
-      input.click();
-    }
+    if (pointerRef.current.move || event.target.tagName !== 'CANVAS')
+      return;
 
-    pointerRef.current.state = 0;
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (event) => {
+      const reader = new FileReader();
+      reader.addEventListener('load', function() {
+        const image = document.createElement('img');
+        image.src = reader.result;
+        setImage(image);
+      });
+      reader.readAsDataURL(event.target.files[0]);
+      reset();
+    };
+    input.click();
   };
 
   useEffect(() => {
