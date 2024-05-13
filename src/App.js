@@ -102,6 +102,7 @@ function App() {
       x: event.nativeEvent.clientX,
       y: event.nativeEvent.clientY,
       move: false,
+      time: Date.now(),
     };
     setHint(true);
   };
@@ -122,6 +123,9 @@ function App() {
       return;
 
     pointerRef.current.down = false;
+    if (Date.now() - pointerRef.current.time < 300)
+      pointerRef.current.move = false;
+
     const cos = Math.cos(rotate);
     const sin = Math.sin(rotate);
     setPosition({
